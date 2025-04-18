@@ -52,3 +52,57 @@ set(gca, 'Position', [0.55, 0.7, 0.35, 0.25]);  % Second plot
 set(gca, 'Position', [0.1, 0.35, 0.35, 0.25]);  % Third plot
 set(gca, 'Position', [0.55, 0.35, 0.35, 0.25]);  % Fourth plot
 set(gca, 'Position', [0.3, 0.05, 0.35, 0.25]);  % Fifth plot, bottom left
+
+% Excercise 1.c
+
+% Extract time and signal data from 'out'
+t1 = out.Delta_m.time;
+Delta_m_1 = out.Delta_m.signals.values;
+m_diff_1 = out.m_nl.signals.values - out.m_star.signals.values;
+
+t2 = out.Delta_m_large.time;
+Delta_m_2 = out.Delta_m_large.signals.values;
+m_diff_2 = out.m_nl_large.signals.values - out.m_star.signals.values;
+
+% Plot
+figure;
+
+% 1st subplot (Av = 1e-5)
+subplot(2,1,1);
+plot(t1, m_diff_1, 'b', 'LineWidth', 1.5); hold on;
+plot(t1, Delta_m_1, 'r--', 'LineWidth', 1.5);
+title('Deviation in m(t) for A_v amplitude = 10^{-5} m^2', 'FontSize', 14);
+ylabel('\Delta m(t) [kg]', 'FontSize', 12);
+legend('m_{nl} - m^*', 'Linearized \Delta m', 'FontSize', 12, 'Location', 'best');
+grid on;
+
+% 2nd subplot (Av = 1e-4)
+subplot(2,1,2);
+plot(t2, m_diff_2, 'b', 'LineWidth', 1.5); hold on;
+plot(t2, Delta_m_2, 'r--', 'LineWidth', 1.5);
+title('Deviation in m(t) for A_v amplitude = 10^{-4} m^2', 'FontSize', 14);
+xlabel('Time [s]', 'FontSize', 12);
+ylabel('\Delta m(t) [kg]', 'FontSize', 12);
+legend('m_{nl} - m^*', 'Linearized \Delta m', 'FontSize', 12, 'Location', 'best');
+grid on;
+
+% Excercise 1.d
+t = out.tout;
+
+h_nl_affine = out.h_nl_affine.signals.values;       % nonlinear response with affine A(h)
+h_star_afiine = out.h_star_affine.signals.values;   % nominal response with affine A(h)
+h_lin_old = out.h_lin_original.signals.values;  % original linearized prediction
+h_lin_new = out.h_lin_affine.signals.values;    % updated linearized prediction
+
+% Plot comparison
+figure;
+plot(t, h_nl_affine - h_star_afiine, 'k', 'LineWidth', 1.5); hold on;
+plot(t, h_lin_old, 'r--', 'LineWidth', 1.5);
+plot(t, h_lin_new, 'b:', 'LineWidth', 1.5);
+legend('True \Delta h = h_{nl} - h^*', 'Linearized (original)', 'Linearized (affine A(h))');
+xlabel('Time [s]');
+ylabel('\Delta h(t) [m]');
+title('Comparison of Deviation Trajectories');
+grid on;
+
+
